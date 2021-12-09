@@ -23,19 +23,21 @@ int main(int argc, char **argv){
 			input.emplace_back(temp);
 		}
 	}
-	filename = input.at(0);
-	command = input.at(1);
-	key = input.at(2);
 	if (input.size() < 3){
 		std::cerr << "clikv needs at least three arguments: FILE COMMAND KEY." << std::endl;;
 		std::cerr << "Available commands are: set get search" << std::endl;
+		return 1;
 	}
+	filename = input.at(0);
+	command = input.at(1);
+	key = input.at(2);
 	if (std::filesystem::exists(filename)){
 		fsize = std::filesystem::file_size(filename);
 	}
 	if (command == "set"){
 		if (input.size() < 4){
 			std::cerr << "The set command needs a VALUE argument." << std::endl;
+			return 1;
 		}
 		const std::string value = input.at(3);
 		set(filename, fsize, key, value);
