@@ -1,5 +1,7 @@
 # CLIKVStore
-A simple key value store for shell scripts
+A simple key value store for shell scripts.
+
+Current there is a flaw in the retrieving function causing the tool not to display setted and succesfully saved entries. It will fixed soon.
 
 ## How to build
 
