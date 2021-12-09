@@ -31,7 +31,8 @@ int main(int argc, char **argv){
 	filename = input.at(0);
 	command = input.at(1);
 	key = input.at(2);
-	if (std::filesystem::exists(filename)){
+	const bool datafile = std::filesystem::exists(filename);
+	if (datafile){
 		fsize = std::filesystem::file_size(filename);
 	}
 	if (command == "set"){
@@ -43,7 +44,9 @@ int main(int argc, char **argv){
 		set(filename, fsize, key, value);
 	}
 	else if (command == "get"){
-		get(filename, fsize, key);
+		if (datafile){
+			get(filename, fsize, key);
+		}
 	}
 	else if (command == "search"){
 		search(filename, fsize, key);
