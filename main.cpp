@@ -13,6 +13,8 @@ bool exists(const std::string &file, const long fsize, const std::string &key);
 int main(int argc, char **argv){
 	std::vector<std::string> input;
 	std::string filename;
+	std::string command;
+	std::string key;
 	long fsize = 0;
 	input.reserve(argc -1);
 	if (argc > 0){
@@ -22,17 +24,27 @@ int main(int argc, char **argv){
 		}
 	}
 	filename = input.at(0);
-	if (std::filesystem::exists(input.at(0))){
-		fsize = std::filesystem::file_size(input.at(0));
+	command = input.at(1);
+	key = input.at(2);
+	if (input.size() < 3){
+		std::cerr << "clikv needs at least three arguments: FILE COMMAND KEY." << std::endl;;
+		std::cerr << "Available commands are: set get search" << std::endl;
 	}
-	if (input.at(1) == "set"){
-		set(filename, fsize, input.at(2), input.at(3));
+	if (std::filesystem::exists(filename)){
+		fsize = std::filesystem::file_size(filename);
 	}
-	else if (input.at(1) == "get"){
-		get(filename, fsize, input.at(2));
+	if (command == "set"){
+		if (input.size() < 4){
+			std::cerr << "The set command needs a VALUE argument." << std::endl;
+		}
+		const std::string value = input.at(3);
+		set(filename, fsize, key, value);
 	}
-	else if (input.at(1) == "search"){
-		search(filename, fsize, input.at(2));
+	else if (command == "get"){
+		get(filename, fsize, key);
+	}
+	else if (command == "search"){
+		search(filename, fsize, key);
 	}
 	return 0;
 }
