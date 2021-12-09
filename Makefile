@@ -8,3 +8,6 @@ BINARY		= clikv
 
 all: main.cpp
 	$(CALL) main.cpp -o $(BINARY)
+
+install: all
+	cp $(BINARY) /usr/local/bin 
