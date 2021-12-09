@@ -5,6 +5,10 @@ A simple key value store for shell scripts
 
 To build the tool simple run: ```make```
 
+## Install system wide
+
+How to install the tool system wide: Run ```make install``` to install it to the directory /usr/local/bin
+
 ## How to use
 
 For the following commands, you should replace these variable names with values appropriate for you:
