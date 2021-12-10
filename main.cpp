@@ -95,11 +95,9 @@ void search(const std::string &file, const std::string &key){
 
 bool exists(const std::string &file, const std::string &key){
 	std::ifstream stream(file, std::ios::binary);
-	//char buffer[fsize];
 	std::string content;
 	while (stream.good()){
 		std::getline(stream, content);
-		//const std::string temp(buffer);
 		if (content.starts_with(key)){
 			return true;;
 		}
