@@ -6,7 +6,7 @@
 
 void set(const std::string &file, const std::string &key, const std::string &value);
 void get(const std::string &file, const std::string &key);
-void delete_entry(const std::string &file,const std::string &key);
+void delete_entry(const std::string &file, const std::string &key);
 void search(const std::string &file, const std::string &key);
 bool exists(const std::string &file, const std::string &key);
 
