@@ -4,18 +4,17 @@
 #include <string>
 #include <vector>
 
-void set(const std::string &file, const long fsize, const std::string &key, const std::string &value);
-void get(const std::string &file, const long fsize, const std::string &key);
-void delete_entry(const std::string &file, const long fsize, const std::string &key);
-void search(const std::string &file, const long fsize, const std::string &key);
-bool exists(const std::string &file, const long fsize, const std::string &key);
+void set(const std::string &file, const std::string &key, const std::string &value);
+void get(const std::string &file, const std::string &key);
+void delete_entry(const std::string &file,const std::string &key);
+void search(const std::string &file, const std::string &key);
+bool exists(const std::string &file, const std::string &key);
 
 int main(int argc, char **argv){
 	std::vector<std::string> input;
 	std::string filename;
 	std::string command;
 	std::string key;
-	long fsize = 0;
 	input.reserve(argc -1);
 	if (argc > 0){
 		for (long i = 1; i < argc; ++i){
@@ -32,36 +31,32 @@ int main(int argc, char **argv){
 	command = input.at(1);
 	key = input.at(2);
 	const bool datafile = std::filesystem::exists(filename);
-	if (datafile){
-		fsize = std::filesystem::file_size(filename);
-	}
 	if (command == "set"){
 		if (input.size() < 4){
 			std::cerr << "The set command needs a VALUE argument." << std::endl;
 			return 1;
 		}
 		const std::string value = input.at(3);
-		set(filename, fsize, key, value);
+		set(filename, key, value);
 	}
 	else if (command == "get"){
 		if (datafile){
-			get(filename, fsize, key);
+			get(filename, key);
 		}
 	}
 	else if (command == "search"){
-		search(filename, fsize, key);
+		search(filename, key);
 	}
 	return 0;
 }
 
-void delete_entry(const std::string &file, const long fsize, const std::string &key){
+void delete_entry(const std::string &file, const std::string &key){
 	std::ifstream in(file, std::ios::binary);
 	std::ofstream out(file, std::ios::binary);
-	char buffer[fsize + 1];
 	std::string content;
 	while (in.good()){
-		in.getline(buffer, fsize);
-		std::string line = buffer;
+		std::string line;
+		std::getline(in, line);
 		if (line.starts_with(key)){
 			line = "";
 		}
@@ -70,9 +65,9 @@ void delete_entry(const std::string &file, const long fsize, const std::string &
 	out.write(content.c_str(), content.size());
 }
 
-void set(const std::string &file, const long fsize, const std::string &key, const std::string &value){
-	if (exists(file, fsize, key)){
-		delete_entry(file, fsize, key);
+void set(const std::string &file, const std::string &key, const std::string &value){
+	if (exists(file, key)){
+		delete_entry(file, key);
 	}
 	std::ofstream stream(file, std::ios::app);
 	const std::string line = key + " " + value + "\n";
@@ -80,22 +75,17 @@ void set(const std::string &file, const long fsize, const std::string &key, cons
 	stream.write(line.c_str(), length);
 }
 
-void get(const std::string &file, const long fsize, const std::string &key){
-	std::ifstream stream(file, std::ios::binary);
-	char buffer[fsize];
+void get(const std::string &file, const std::string &key){
+	std::ifstream stream(file, std::ios::in);
+	std::string buffer;
 	while (stream.good()){
-		stream.getline(buffer, fsize);
-		const std::string temp(buffer);
-		if (temp.starts_with(key)){
-			const std::string value = temp.substr(key.length());
-			std::cout << value.substr(1) << std::endl;
-			break;
-		}
+		std::getline(stream, buffer);
 	}
+	key.size();
 }
 
-void search(const std::string &file, const long fsize, const std::string &key){
-	if (exists(file, fsize, key)){
+void search(const std::string &file, const std::string &key){
+	if (exists(file, key)){
 		std::cout << "found" << std::endl;
 	}
 	else{
@@ -103,13 +93,14 @@ void search(const std::string &file, const long fsize, const std::string &key){
 	}
 }
 
-bool exists(const std::string &file, const long fsize, const std::string &key){
+bool exists(const std::string &file, const std::string &key){
 	std::ifstream stream(file, std::ios::binary);
-	char buffer[fsize];
+	//char buffer[fsize];
+	std::string content;
 	while (stream.good()){
-		stream.getline(buffer, fsize);
-		const std::string temp(buffer);
-		if (temp.starts_with(key)){
+		std::getline(stream, content);
+		//const std::string temp(buffer);
+		if (content.starts_with(key)){
 			return true;;
 		}
 	}
